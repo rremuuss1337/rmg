@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RMG | Remus Music Group</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Oxanium:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-color: #9d4edd;
+            --bg-dark: #0a0a0a;
+            --bg-light: #f0f0f5;
+            --text-light: #ffffff;
+            --text-dark: #1a1a1a;
+            --transition-speed: 0.6s;
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            font-family: 'Oxanium', sans-serif;
+            font-weight: 600;
+            overflow-x: hidden;
+            transition: background-color var(--transition-speed), color var(--transition-speed);
+            margin: 0;
+        }
+        body.light-mode {
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+        }
+        body.en .tr, body.tr .en { display: none; }
+        body.light-mode .logo-image img,
+        body.light-mode .nav-links a,
+        body.light-mode .btn-login,
+        body.light-mode .btn-submit {
+            filter: drop-shadow(0 0 4px rgba(0,0,0,0.2));
+        }
+        body.light-mode .btn-login,
+        body.light-mode .btn-submit {
+            border-color: #7c3aed;
+        }
+        body.light-mode .btn-login:hover,
+        body.light-mode .btn-submit:hover {
+            background: linear-gradient(135deg, #7c3aed, #a78bfa);
+        }
+        body.light-mode #particles-js {
+            filter: invert(1) hue-rotate(180deg);
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: all var(--transition-speed) cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        #particles-js {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 25px 8%;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            background: rgba(10, 10, 10, 0.85);
+            backdrop-filter: blur(12px);
+        }
+        body.light-mode nav {
+            background: rgba(240, 240, 245, 0.85);
+        }
+        .logo-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: var(--text-light);
+        }
+        .site-logo {
+            height: 44px;
+            width: auto;
+            max-width: 220px;
+            object-fit: contain;
+            transition: transform 0.4s ease;
+        }
+        .logo-wrapper:hover .site-logo {
+            transform: scale(1.05);
+        }
+        .logo-text-group {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 24px;
+            letter-spacing: 2px;
+        }
+        .logo-text-group .rmg { color: var(--primary-color); font-weight: 900; }
+        .logo-text-group .full { font-size: 16px; opacity: 0.9; }
+        body.light-mode .logo-text-group { color: var(--text-dark); }
+        /* Fallback metin (logo yüklenmezse) */
+        .logo-text {
+            display: none;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 28px;
+            letter-spacing: 3px;
+            color: var(--text-light);
+        }
+        .logo-wrapper img:not([src]) + .logo-text,
+        .logo-wrapper img[src=""] + .logo-text {
+            display: inline;
+        }
+        body.light-mode .logo-text {
+            color: var(--text-dark);
+        }
+        .nav-links {
+            display: flex;
+            gap: 40px;
+        }
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-light);
+            font-weight: 700;
+            font-size: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+        body.light-mode .nav-links a { color: var(--text-dark); }
+        .nav-links a:hover {
+            color: var(--primary-color);
+            text-shadow: 0 0 10px var(--primary-color);
+        }
+        .right-controls {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+        .lang-toggle {
+            background: rgba(255,255,255,0.1);
+            border-radius: 50px;
+            padding: 6px 12px;
+            cursor: pointer;
+            font-weight: 800;
+            font-size: 14px;
+            user-select: none;
+        }
+        body.light-mode .lang-toggle { background: rgba(0,0,0,0.1); }
+        .lang-toggle span { padding: 0 8px; }
+        .lang-toggle .active {
+            color: var(--primary-color);
+            background: rgba(157,78,221,0.3);
+            border-radius: 20px;
+            padding: 4px 10px;
+        }
+        .theme-toggle {
+            width: 60px;
+            height: 28px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50px;
+            position: relative;
+            cursor: pointer;
+        }
+        body.light-mode .theme-toggle { background: rgba(0,0,0,0.1); }
+        .theme-toggle::before {
+            content: '🌙';
+            position: absolute;
+            left: 4px;
+            font-size: 18px;
+            transition: transform 0.4s;
+        }
+        body.light-mode .theme-toggle::before {
+            content: '☀️';
+            transform: translateX(32px);
+        }
+        .btn-login, .btn-submit {
+            background: linear-gradient(135deg, transparent, rgba(157,78,221,0.2));
+            border: 2px solid var(--primary-color);
+            color: var(--text-light);
+            padding: 12px 32px;
+            border-radius: 50px;
+            font-weight: 800;
+            font-size: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            box-shadow: 0 0 15px rgba(157,78,221,0.3);
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .btn-login:hover, .btn-submit:hover {
+            background: linear-gradient(135deg, var(--primary-color), #c084fc);
+            box-shadow: 0 0 30px var(--primary-color);
+            transform: scale(1.08);
+        }
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 10%;
+        }
+        .hero h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 80px;
+            margin-bottom: 25px;
+            letter-spacing: 4px;
+        }
+        .hero p {
+            font-size: 19px;
+            color: #aaa;
+            max-width: 680px;
+            margin-bottom: 40px;
+        }
+        .section-title {
+            text-align: center;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 48px;
+            margin: 120px 0 60px;
+            letter-spacing: 2px;
+        }
+        /* Artists Slider */
+        #artists {
+            position: relative;
+            padding-bottom: 120px;
+        }
+        .artists-slider {
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        .slider-track {
+            display: flex;
+            transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        .artist-card {
+            flex: 0 0 320px;
+            margin: 0 15px;
+            height: 520px;
+            position: relative;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .artist-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: grayscale(80%) brightness(0.9);
+            transition: all 0.7s;
+        }
+        .artist-card:hover img {
+            filter: grayscale(0%) brightness(1);
+            transform: scale(1.1);
+        }
+        .artist-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 30px 20px;
+            background: linear-gradient(transparent, rgba(0,0,0,0.9));
+        }
+        .slider-nav {
+            position: absolute;
+            top: 50%;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            transform: translateY(-50%);
+            pointer-events: none;
+        }
+        .slider-nav button {
+            pointer-events: all;
+            background: linear-gradient(135deg, var(--primary-color), #c084fc);
+            border: none;
+            color: white;
+            font-size: 48px;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 25px rgba(157,78,221,0.6);
+            transition: all 0.4s ease;
+        }
+        .slider-nav button:hover {
+            transform: scale(1.15) translateY(-5px);
+            box-shadow: 0 0 45px var(--primary-color);
+        }
+        .slider-nav .prev { margin-left: 40px; }
+        .slider-nav .next { margin-right: 40px; }
+        /* Features */
+        #features {
+            padding: 0 8% 140px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 30px;
+        }
+        .feature-card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 20px;
+            padding: 45px 35px;
+            text-align: center;
+            border: 1px solid rgba(157,78,221,0.15);
+            transition: all 0.5s;
+        }
+        .feature-card:hover {
+            transform: translateY(-12px);
+            background: rgba(157,78,221,0.12);
+            border-color: var(--primary-color);
+            box-shadow: 0 20px 50px rgba(157,78,221,0.25);
+        }
+        .feature-card h3 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 26px;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+        }
+        .feature-card p {
+            font-size: 16px;
+            line-height: 1.6;
+            color: #ccc;
+        }
+        body.light-mode .feature-card p { color: #444; }
+        /* About & Contact */
+        #about, #contact {
+            padding: 0 8% 120px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+        #about p {
+            font-size: 18px;
+            line-height: 1.7;
+            color: #ccc;
+            margin-bottom: 25px;
+        }
+        body.light-mode #about p { color: #444; }
+        /* Modern Contact Form */
+        #contact {
+            padding-bottom: 160px;
+        }
+        .contact-box {
+            background: rgba(157,78,221,0.08);
+            border: 1px solid rgba(157,78,221,0.3);
+            border-radius: 24px;
+            padding: 60px 50px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        body.light-mode .contact-box {
+            background: rgba(124,58,237,0.08);
+            border-color: rgba(124,58,237,0.4);
+        }
+        .form-group {
+            margin-bottom: 28px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 15px;
+            color: #ccc;
+        }
+        body.light-mode .form-group label { color: #555; }
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        textarea,
+        input[type="file"] {
+            width: 100%;
+            padding: 14px 18px;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(157,78,221,0.4);
+            border-radius: 12px;
+            color: white;
+            font-family: 'Oxanium', sans-serif;
+            font-size: 15px;
+        }
+        body.light-mode input,
+        body.light-mode textarea,
+        body.light-mode input[type="file"] {
+            background: rgba(0,0,0,0.06);
+            color: #111;
+            border-color: #c084fc;
+        }
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        input[type="file"] {
+            padding: 10px;
+        }
+        .success-message {
+            margin-top: 30px;
+            padding: 16px;
+            background: rgba(0, 200, 80, 0.15);
+            border: 1px solid #00c853;
+            border-radius: 12px;
+            color: #00ff9d;
+            font-weight: 700;
+            text-align: center;
+            display: none;
+        }
+        .success-message.show {
+            display: block;
+        }
+        /* Footer Styles */
+        footer {
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 40px 8% 20px;
+            text-align: center;
+            border-top: 1px solid rgba(157, 78, 221, 0.15);
+        }
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .social-links {
+            margin: 20px 0 30px;
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+        }
+        .social-links a {
+            color: #aaa;
+            font-size: 24px;
+            transition: color 0.3s;
+        }
+        .social-links a:hover {
+            color: var(--primary-color);
+        }
+        .copyright {
+            color: #777;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+        .copyright .rmg-logo-small {
+            height: 18px;
+            vertical-align: middle;
+            margin: 0 6px;
+        }
+    </style>
+</head>
+<body class="tr">
+    <div id="particles-js"></div>
+    <nav>
+        <a href="#" class="logo-wrapper">
+            <img
+                src="https://cdn.discordapp.com/attachments/1453425560859709520/1454135850236510260/Gemini_Generated_Image_9mnz829mnz829mnz-3000x3000.png?ex=694ffd0b&is=694eab8b&hm=8dde327225ce152dd92860e3590089529308525eaaa9c0bbb0780c558909f6f0&"
+                alt="Remus Music Group Logo"
+                class="site-logo"
+            >
+            <div class="logo-text-group">
+                <span class="rmg">RMG</span>
+                <div class="full">© Remus Music Group</div>
+            </div>
+        </a>
+        <div class="nav-links">
+            <a href="#home" class="tr">Ana Sayfa</a><a href="#home" class="en">Home</a>
+            <a href="#artists" class="tr">Sanatçılar</a><a href="#artists" class="en">Artists</a>
+            <a href="#features" class="tr">Özellikler</a><a href="#features" class="en">Features</a>
+            <a href="#about" class="tr">Hakkımızda</a><a href="#about" class="en">About Us</a>
+            <a href="#contact" class="tr">İletişim</a><a href="#contact" class="en">Contact</a>
+        </div>
+        <div class="right-controls">
+            <div class="lang-toggle" id="langToggle">
+                <span class="tr active">TR</span><span class="en">EN</span>
+            </div>
+            <div class="theme-toggle" id="themeToggle"></div>
+            <a href="login.html" class="btn-login tr">GİRİŞ</a><a href="login.html" class="btn-login en">LOGIN</a>
+        </div>
+    </nav>
+    <section class="hero" id="home">
+        <h1>REMUS MUSIC GROUP</h1>
+        <p class="tr">Müziğin geleceğini bağımsız ruhla inşa ediyoruz. Küresel dağıtım, şeffaf yönetim, blockchain destekli haklar.</p>
+        <p class="en">Building the future of music with an independent spirit. Global distribution, transparent management, blockchain-backed rights.</p>
+        <div>
+            <a href="#features" class="btn-login tr">Keşfet</a>
+            <a href="#features" class="btn-login en">Discover</a>
+        </div>
+    </section>
+    <section id="artists">
+        <h2 class="section-title tr">Sanatçılarımız</h2>
+        <h2 class="section-title en">Our Artists</h2>
+        <div class="artists-slider">
+            <div class="slider-track" id="sliderTrack">
+                <div class="artist-card">
+                    <img src="https://cdn.discordapp.com/attachments/1453425560859709520/1454144300395925565/image.png?ex=695004e9&is=694eb369&hm=7450d49f82ff4e2f5f03dffc81ca5f696f33fe1430969877f35a2514e5060dd7&" alt="Can Rose">
+                    <div class="artist-info">
+                        <h3>Can Rose</h3>
+                        <p class="tr">Electronic / Pop</p><p class="en">Electronic / Pop</p>
+                    </div>
+                </div>
+                <div class="artist-card">
+                    <img src="https://cdn.discordapp.com/attachments/1453425560859709520/1453799848150175977/heijann.jpg?ex=694f6cde&is=694e1b5e&hm=b252468a020515201b72be986edbf52bbc4cca75d9b2e87039cc577c8f6785b8&" alt="Remus">
+                    <div class="artist-info">
+                        <h3>Remus</h3>
+                        <p class="tr">Hip-Hop / Rap</p><p class="en">Hip-Hop / Rap</p>
+                    </div>
+                </div>
+                <div class="artist-card">
+                    <img src="https://www.datocms-assets.com/17746/1712944076-reh3.jpg?auto=format&w=1000" alt="Jax Thorn">
+                    <div class="artist-info">
+                        <h3>Jax Thorn</h3>
+                        <p class="tr">Indie / Rock</p><p class="en">Indie / Rock</p>
+                    </div>
+                </div>
+                <div class="artist-card">
+                    <img src="https://images.ajc.com/resizer/v2/C6NA7YXMYDMPKXDCNAFC7OSNJA.jpg?auth=d1990add1bfae35830839bc904332ce38476506968d5245bf750e2260b62b2a1&width=3840&height=2475&smart=true" alt="Luna Echo">
+                    <div class="artist-info">
+                        <h3>Luna Echo</h3>
+                        <p class="tr">R&B / Soul</p><p class="en">R&B / Soul</p>
+                    </div>
+                </div>
+                <div class="artist-card">
+                    <img src="https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=800" alt="Nova Flux">
+                    <div class="artist-info">
+                        <h3>Nova Flux</h3>
+                        <p class="tr">Techno / EDM</p><p class="en">Techno / EDM</p>
+                    </div>
+                </div>
+                <div class="artist-card">
+                    <img src="https://www.rollingstone.com/wp-content/uploads/2022/01/rolling-stone-most-stylish-musicians-lead.jpg?w=1581&h=1054&crop=1" alt="Aria Nova">
+                    <div class="artist-info">
+                        <h3>Aria Nova</h3>
+                        <p class="tr">Hip-Hop / Rap</p><p class="en">Hip-Hop / Rap</p>
+                    </div>
+                </div>
+                <div class="artist-card">
+                    <img src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=800" alt="Zara Pulse">
+                    <div class="artist-info">
+                        <h3>Zara Pulse</h3>
+                        <p class="tr">Trap / Future Bass</p><p class="en">Trap / Future Bass</p>
+                    </div>
+                </div>
+            </div>
+            <div class="slider-nav">
+                <button class="prev" id="prevBtn">←</button>
+                <button class="next" id="nextBtn">→</button>
+            </div>
+        </div>
+    </section>
+    <section id="features">
+        <h2 class="section-title tr">Özelliklerimiz</h2>
+        <h2 class="section-title en">Our Features</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <h3 class="tr">Küresel Dağıtım Ağı</h3><h3 class="en">Global Distribution Network</h3>
+                <p class="tr">Müziğinizi Spotify, Apple Music, TikTok, YouTube, Deezer ve 150+ platforma tek tıkla ulaştırıyoruz. Hızlı onay, yüksek görünürlük.</p>
+                <p class="en">Deliver your music to Spotify, Apple Music, TikTok, YouTube, Deezer +150 platforms instantly. Fast approval, maximum reach.</p>
+            </div>
+            <div class="feature-card">
+                <h3 class="tr">Şeffaf Royalty Sistemi</h3><h3 class="en">Transparent Royalty System</h3>
+                <p class="tr">Her stream, download ve sync gelirini gerçek zamanlı takip edin. Blockchain tabanlı akıllı kontratlarla %100 şeffaflık.</p>
+                <p class="en">Track every stream, download and sync revenue in real-time. 100% transparency with blockchain smart contracts.</p>
+            </div>
+            <div class="feature-card">
+                <h3 class="tr">Web3 & NFT Entegrasyonu</h3><h3 class="en">Web3 & NFT Integration</h3>
+                <p class="tr">Fanlara özel NFT koleksiyonları, token-gated içerik ve fan token ekonomisi ile sanatçı-fan bağını güçlendiriyoruz.</p>
+                <p class="en">Exclusive NFT drops, token-gated content and fan token economy to strengthen artist-fan relationships.</p>
+            </div>
+            <div class="feature-card">
+                <h3 class="tr">Kariyer & Gelişim Desteği</h3><h3 class="en">Career & Development Support</h3>
+                <p class="tr">Prodüksiyon, mastering, PR, playlist pitching, turne planlama ve menajerlik hizmetleri tam kadro ekibimizle.</p>
+                <p class="en">Production, mastering, PR, playlist pitching, tour booking and management services with our full team.</p>
+            </div>
+            <div class="feature-card">
+                <h3 class="tr">Yaratıcı İşbirlikleri</h3><h3 class="en">Creative Collaborations</h3>
+                <p class="tr">Marka işbirlikleri, film/dizi sync, oyun müzikleri ve cross-industry projeler için kapılarınız açık.</p>
+                <p class="en">Brand partnerships, film/TV sync, game music and cross-industry projects opportunities.</p>
+            </div>
+            <div class="feature-card">
+                <h3 class="tr">Veri & Analitik Dashboard</h3><h3 class="en">Data & Analytics Dashboard</h3>
+                <p class="tr">Kendi özel dashboard'unuzda dinleyici demografisi, coğrafya, büyüme trendleri ve gelir analizlerini görün.</p>
+                <p class="en">Private dashboard with listener demographics, geography, growth trends and revenue analytics.</p>
+            </div>
+            <div class="feature-card">
+                <h3 class="tr">Topluluk & Networking</h3><h3 class="en">Community & Networking</h3>
+                <p class="tr">Özel Discord sunucusu, aylık networking etkinlikleri ve sektör liderleriyle tanışma fırsatları.</p>
+                <p class="en">Private Discord, monthly networking events and meetings with industry leaders.</p>
+            </div>
+        </div>
+    </section>
+    <section id="about">
+        <h2 class="section-title tr">Hakkımızda</h2>
+        <h2 class="section-title en">About Us</h2>
+        <p class="tr">Remus Music Group, bağımsız sanatçıların hak ettiği değeri görmesi için kuruldu. Şeffaf royalty, yenilikçi teknolojiler ve küresel vizyonla müziğin geleceğini şekillendiriyoruz.</p>
+        <p class="en">Remus Music Group was founded to give independent artists the value they deserve. Shaping the future of music with transparent royalties, innovative tech and global vision.</p>
+        <p class="tr">2025 itibarıyla 70+ sanatçıya ev sahipliği yapıyor, Web3 entegrasyonuyla fan ekonomisini yeniden tanımlıyoruz.</p>
+        <p class="en">As of 2025, home to 70+ artists, redefining fan economy with Web3 integration.</p>
+    </section>
+    <section id="contact">
+        <div class="contact-box">
+            <h2 class="section-title tr">İletişim & Demo Gönder</h2>
+            <h2 class="section-title en">Contact & Submit Demo</h2>
+            <form id="demoForm">
+                <div class="form-group">
+                    <label class="tr">E-posta Adresiniz</label>
+                    <label class="en">Your Email</label>
+                    <input type="email" name="email" required placeholder="ornek@domain.com">
+                </div>
+                <div class="form-group">
+                    <label class="tr">Telefon Numaranız (isteğe bağlı)</label>
+                    <label class="en">Phone Number (optional)</label>
+                    <input type="tel" name="phone" placeholder="+90 5XX XXX XX XX">
+                </div>
+                <div class="form-group">
+                    <label class="tr">Kendinizden ve parçanızdan kısaca bahsedin</label>
+                    <label class="en">Tell us about yourself and your track</label>
+                    <textarea name="message" required placeholder="Örn: Merhaba, ben ... türünde müzik üretiyorum..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="tr">Parça İsmi</label>
+                    <label class="en">Track Name</label>
+                    <input type="text" name="track" required placeholder="Örn: Gece Yarısı">
+                </div>
+                <div class="form-group">
+                    <label class="tr">Artist / Sanatçı İsmi</label>
+                    <label class="en">Artist Name</label>
+                    <input type="text" name="artist" required placeholder="Örn: Can Rose">
+                </div>
+                <div class="form-group">
+                    <label class="tr">Demo Dosyası (sadece .wav kabul edilir)</label>
+                    <label class="en">Demo File (only .wav accepted)</label>
+                    <input type="file" name="demo" accept=".wav,audio/wav" required>
+                </div>
+                <button type="submit" class="btn-submit tr">DEMO GÖNDER</button>
+                <button type="submit" class="btn-submit en">SUBMIT DEMO</button>
+            </form>
+            <div id="successMessageTR" class="success-message tr">
+                ✓ Demo başarıyla yüklendi! En kısa sürede dönüş yapacağız.
+            </div>
+            <div id="successMessageEN" class="success-message en">
+                ✓ Demo successfully submitted! We'll get back to you soon.
+            </div>
+        </div>
+    </section>
+    <footer>
+        <div class="footer-content">
+            <div class="social-links">
+                <a href="https://www.instagram.com/rremuuss/" target="_blank" title="Instagram">
+                    <i class="fab fa-instagram"></i>
+                </a>
+            </div>
+            <div class="copyright">
+                <img 
+                    src="https://cdn.discordapp.com/attachments/1453425560859709520/1454135850236510260/Gemini_Generated_Image_9mnz829mnz829mnz-3000x3000.png?ex=694ffd0b&is=694eab8b&hm=8dde327225ce152dd92860e3590089529308525eaaa9c0bbb0780c558909f6f0&"
+                    alt="RMG" 
+                    class="rmg-logo-small"
+                >
+                © Remus Music Group 2025. Tüm hakları saklıdır.
+            </div>
+        </div>
+    </footer>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+        AOS.init({ duration: 1200, once: true });
+        particlesJS("particles-js", {
+            "particles": {
+                "number": { "value": 90 },
+                "color": { "value": "#9d4edd" },
+                "shape": { "type": "circle" },
+                "opacity": { "value": 0.45 },
+                "size": { "value": 3.5 },
+                "line_linked": { "enable": true, "distance": 160, "color": "#9d4edd", "opacity": 0.25, "width": 1.2 },
+                "move": { "enable": true, "speed": 1.8 }
+            }
+        });
+        // Tema toggle
+        document.getElementById('themeToggle').addEventListener('click', () => {
+            document.body.classList.toggle('light-mode');
+        });
+        // Dil toggle
+        document.getElementById('langToggle').addEventListener('click', () => {
+            document.body.classList.toggle('en');
+            document.body.classList.toggle('tr');
+        });
+        // Demo form başarı mesajı (dil bazlı)
+        document.getElementById('demoForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const isEnglish = document.body.classList.contains('en');
+            const successEl = isEnglish ? document.getElementById('successMessageEN') : document.getElementById('successMessageTR');
+            successEl.classList.add('show');
+            setTimeout(() => {
+                successEl.classList.remove('show');
+            }, 8000);
+            // İstersen formu sıfırla: this.reset();
+        });
+        // Sonsuz slider
+        const track = document.getElementById('sliderTrack');
+        const cards = Array.from(track.children);
+        const cardWidth = cards[0].offsetWidth + 30;
+        let currentIndex = 0;
+        const totalCards = cards.length;
+        const firstClones = cards.slice(-3).map(c => c.cloneNode(true));
+        const lastClones = cards.slice(0, 3).map(c => c.cloneNode(true));
+        firstClones.forEach(clone => track.appendChild(clone));
+        lastClones.forEach(clone => track.prepend(clone));
+        track.style.transform = `translateX(-${3 * cardWidth}px)`;
+        currentIndex = 3;
+        document.getElementById('nextBtn').addEventListener('click', () => {
+            currentIndex++;
+            track.style.transition = 'transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+            track.style.transform = `translateX(-${currentIndex * cardWidth}px)`;
+            if (currentIndex >= totalCards + 3) {
+                setTimeout(() => {
+                    track.style.transition = 'none';
+                    currentIndex = 3;
+                    track.style.transform = `translateX(-${currentIndex * cardWidth}px)`;
+                    setTimeout(() => { track.style.transition = 'transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94)'; }, 50);
+                }, 800);
+            }
+        });
+        document.getElementById('prevBtn').addEventListener('click', () => {
+            currentIndex--;
+            track.style.transition = 'transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+            track.style.transform = `translateX(-${currentIndex * cardWidth}px)`;
+            if (currentIndex <= 0) {
+                setTimeout(() => {
+                    track.style.transition = 'none';
+                    currentIndex = totalCards;
+                    track.style.transform = `translateX(-${currentIndex * cardWidth}px)`;
+                    setTimeout(() => { track.style.transition = 'transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94)'; }, 50);
+                }, 800);
+            }
+        });
+    </script>
+</body>
+</html>

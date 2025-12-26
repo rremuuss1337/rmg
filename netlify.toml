@@ -1,0 +1,16 @@
+[build]
+  functions = "netlify/functions"
+  publish = "."
+
+# Function yollarını koru (redirect'i sadece statik yollara uygula)
+[[redirects]]
+  from = "/.netlify/functions/*"
+  to = "/.netlify/functions/:splat"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+  conditions = { Path = "!/.netlify/functions/*" }
