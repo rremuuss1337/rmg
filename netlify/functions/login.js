@@ -1,24 +1,106 @@
-exports.handler = async (event) => {
-  if (event.httpMethod !== "POST") return { statusCode: 405, body: "Method Not Allowed" };
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | Remus</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #030303; color: #fff; height: 100vh; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .bg-glow { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at 50% 50%, rgba(159, 0, 255, 0.1), transparent 50%); z-index: -1; }
+        
+        .glass-box {
+            background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 24px;
+            padding: 3rem; width: 400px; text-align: center;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        }
+        input {
+            width: 100%; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1);
+            padding: 15px; border-radius: 12px; color: #fff; margin-bottom: 1rem; outline: none; box-sizing: border-box; transition: 0.3s;
+        }
+        input:focus { border-color: #9f00ff; box-shadow: 0 0 15px rgba(159,0,255,0.2); }
+        
+        button {
+            width: 100%; background: #9f00ff; border: none; padding: 15px; border-radius: 12px;
+            color: #fff; font-weight: 700; cursor: pointer; margin-top: 1rem; transition: 0.3s;
+        }
+        button:hover { background: #b44aff; transform: translateY(-2px); }
+        
+        /* TOAST NOTIFICATION STILI */
+        .toast-container { position: fixed; top: 20px; right: 20px; z-index: 9999; }
+        .toast {
+            background: rgba(20, 20, 20, 0.9); backdrop-filter: blur(10px);
+            color: #fff; padding: 16px 24px; border-radius: 12px; margin-bottom: 10px;
+            border-left: 4px solid #9f00ff;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            display: flex; align-items: center; gap: 12px;
+            transform: translateX(120%); transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+        }
+        .toast.show { transform: translateX(0); }
+        .toast.success { border-left-color: #00ffa3; }
+        .toast.error { border-left-color: #ff3d00; }
+    </style>
+</head>
+<body>
+    <div class="bg-glow"></div>
+    <div class="toast-container" id="toastContainer"></div> <div class="glass-box">
+        <h2 style="margin-bottom: 0.5rem; font-size: 1.8rem;">Welcome Back</h2>
+        <p style="color: #888; margin-bottom: 2rem;">Login to access your dashboard</p>
+        <form id="loginForm">
+            <input type="email" id="email" placeholder="Email " required>
+            <input type="password" id="password" placeholder="Password " required>
+            <button type="submit">Sign In</button>
+        </form>
+        <a href="index.html#contact" style="margin-top: 1.5rem; display: block; color: #888; text-decoration: none;">Create an account</a>
+    </div>
 
-  try {
-    const { email, password } = JSON.parse(event.body);
+    <script>
+        // Bildirim Fonksiyonu
+        function showNotification(message, type = 'success') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.innerHTML = `<span>${type === 'success' ? '✅' : '⚠️'}</span> ${message}`;
+            container.appendChild(toast);
+            
+            // Animasyon için azıcık bekle
+            setTimeout(() => toast.classList.add('show'), 10);
 
-    // 🔥 TEST BYPASS MODU ACTIVE
-    if (email === "test1@gmail.com" && password === "test") {
-      return {
-        statusCode: 200,
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ 
-          success: true, 
-          username: "Remus Admin", 
-          token: "bypass-token-123" 
-        })
-      };
-    }
+            // 3 saniye sonra kaldır
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 500);
+            }, 3000);
+        }
 
-    return { statusCode: 401, body: JSON.stringify({ message: "Hatalı giriş!" }) };
-  } catch (error) {
-    return { statusCode: 500, body: JSON.stringify({ message: error.message }) };
-  }
-};
+        document.getElementById('loginForm').onsubmit = async (e) => {
+            e.preventDefault();
+            const btn = e.target.querySelector('button');
+            btn.innerHTML = 'Checking...'; // Buton yazısını değiştir
+
+            try {
+                const res = await fetch('/.netlify/functions/login', {
+                    method: 'POST',
+                    body: JSON.stringify({ 
+                        email: document.getElementById('email').value, 
+                        password: document.getElementById('password').value 
+                    })
+                });
+                const data = await res.json();
+
+                if (data.success) {
+                    showNotification('Login Successful! Redirecting...', 'success');
+                    setTimeout(() => { window.location.href = 'dashboard.html'; }, 1500);
+                } else {
+                    showNotification('Login Failed: Check your info.', 'error');
+                    btn.innerHTML = 'Sign In';
+                }
+            } catch (err) {
+                showNotification('System Error! Try again.', 'error');
+                btn.innerHTML = 'Sign In';
+            }
+        };
+    </script>
+</body>
+</html>
