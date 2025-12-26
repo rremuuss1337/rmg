@@ -1,45 +1,99 @@
-<!-- uye-listesi.html - Üye Listesi Sayfası -->
 <!DOCTYPE html>
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RMG Üye Listesi</title>
-    <!-- Aynı linkler -->
+    <title>RMG Admin - Üye Listesi</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Oxanium:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
-        /* Aynı stiller */
-        table { width: 100%; border-collapse: collapse; }
-        th, td { padding: 12px; border: 1px solid rgba(157,78,221,0.3); text-align: left; }
-        th { background: rgba(157,78,221,0.12); }
+        :root { --primary-color: #9d4edd; --bg-dark: #0a0a0a; --text-light: #ffffff; }
+        body { background-color: var(--bg-dark); color: var(--text-light); font-family: 'Oxanium', sans-serif; margin: 0; font-weight: 600; }
+        nav { /* aynı nav */ }
+        .content { padding: 140px 8% 80px; max-width: 1000px; margin: 0 auto; }
+        h2.section-title { font-family: 'Orbitron', sans-serif; font-size: 42px; text-align: center; margin-bottom: 50px; color: var(--primary-color); }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: rgba(157,78,221,0.05);
+        }
+        th, td {
+            padding: 16px;
+            text-align: left;
+            border-bottom: 1px solid rgba(157,78,221,0.2);
+        }
+        th {
+            background: rgba(157,78,221,0.15);
+            color: var(--primary-color);
+        }
+        tr:hover { background: rgba(157,78,221,0.08); }
+        footer { text-align: center; padding: 30px; color: #777; font-size: 14px; }
     </style>
 </head>
 <body>
-    <!-- Nav -->
+
+    <nav>
+        <!-- Aynı nav -->
+        <a href="/" class="logo-wrapper">
+            <img src="https://cdn.discordapp.com/attachments/1453425560859709520/1454135850236510260/Gemini_Generated_Image_9mnz829mnz829mnz-3000x3000.png?ex=694ffd0b&is=694eab8b&hm=8dde327225ce152dd92860e3590089529308525eaaa9c0bbb0780c558909f6f0&" alt="RMG Logo" class="site-logo">
+            <span>RMG Admin</span>
+        </a>
+        <div class="nav-links">
+            <a href="uye-ekle.html">Üye Ekle</a>
+            <a href="uye-cikar.html">Üye Çıkar</a>
+            <a href="uye-listesi.html">Üye Listesi</a>
+            <a href="#" onclick="logout()">Çıkış Yap</a>
+        </div>
+    </nav>
+
     <div class="content">
-        <h2 class="section-title">Üye Listesi</h2>
-        <table id="memberTable">
+        <h2 class="section-title">Tüm Üyeler</h2>
+        <table id="membersTable">
             <thead>
-                <tr><th>İsim</th><th>Email</th></tr>
+                <tr>
+                    <th>Üye Adı</th>
+                    <th>E-posta</th>
+                </tr>
             </thead>
             <tbody></tbody>
         </table>
     </div>
-    <!-- Footer -->
+
+    <footer>
+        © Remus Music Group 2025 - Admin Panel
+    </footer>
+
     <script>
         if (localStorage.getItem('adminLoggedIn') !== 'true') {
             window.location.href = 'remuscanoapican.html';
         }
-        function loadMemberList() {
-            const tbody = document.querySelector('#memberTable tbody');
+
+        function logout() {
+            localStorage.removeItem('adminLoggedIn');
+            window.location.href = 'remuscanoapican.html';
+        }
+
+        function loadMembers() {
+            const tbody = document.querySelector('#membersTable tbody');
             tbody.innerHTML = '';
-            let members = JSON.parse(localStorage.getItem('members')) || [];
+            let members = JSON.parse(localStorage.getItem('members') || '[]');
+
+            if (members.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="2" style="text-align:center; color:#aaa;">Henüz üye yok.</td></tr>';
+                return;
+            }
+
             members.forEach(member => {
                 const tr = document.createElement('tr');
-                tr.innerHTML = `<td>${member.name}</td><td>${member.email}</td>`;
+                tr.innerHTML = `
+                    <td>${member.name}</td>
+                    <td>${member.email}</td>
+                `;
                 tbody.appendChild(tr);
             });
         }
-        loadMemberList();
+
+        loadMembers();
     </script>
 </body>
 </html>
