@@ -1,0 +1,49 @@
+<!-- uye-cikar.html - Üye Çıkar Sayfası -->
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RMG Üye Çıkar</title>
+    <!-- Aynı linkler -->
+    <style>
+        /* Aynı stiller */
+        .member-list { list-style: none; padding: 0; }
+        .member-item { display: flex; justify-content: space-between; padding: 10px; border-bottom: 1px solid rgba(157,78,221,0.3); }
+        .remove-btn { background: #ff5555; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <!-- Nav -->
+    <div class="content">
+        <h2 class="section-title">Üye Çıkar</h2>
+        <ul id="removeList" class="member-list"></ul>
+    </div>
+    <!-- Footer -->
+    <script>
+        if (localStorage.getItem('adminLoggedIn') !== 'true') {
+            window.location.href = 'remuscanoapican.html';
+        }
+        function loadRemoveList() {
+            const list = document.getElementById('removeList');
+            list.innerHTML = '';
+            let members = JSON.parse(localStorage.getItem('members')) || [];
+            members.forEach((member, index) => {
+                const li = document.createElement('li');
+                li.className = 'member-item';
+                li.innerHTML = `<span>${member.name} (${member.email})</span>
+                                <button class="remove-btn" onclick="removeMember(${index})">Çıkar</button>`;
+                list.appendChild(li);
+            });
+        }
+        function removeMember(index) {
+            let members = JSON.parse(localStorage.getItem('members')) || [];
+            members.splice(index, 1);
+            localStorage.setItem('members', JSON.stringify(members));
+            loadRemoveList();
+            alert('Üye çıkarıldı!');
+        }
+        loadRemoveList();
+    </script>
+</body>
+</html>

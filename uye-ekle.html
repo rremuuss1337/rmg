@@ -1,0 +1,58 @@
+<!-- uye-ekle.html - Üye Ekle Sayfası -->
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RMG Üye Ekle</title>
+    <!-- Aynı font ve style linkleri -->
+    <style>
+        /* Ana stiller + form stili */
+        body { /* Aynı body stili */ }
+        nav { /* Aynı nav */ }
+        .content {
+            padding: 120px 8%;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        form { /* Form stili */ }
+        .form-group { margin-bottom: 20px; }
+        input { /* Input stili */ }
+        button { /* Button stili */ }
+    </style>
+</head>
+<body>
+    <!-- Aynı nav, logo vs. -->
+    <nav><!-- Aynı nav, ama dashboard linkleri ile --></nav>
+    <div class="content">
+        <h2 class="section-title">Üye Ekle</h2>
+        <form id="addMemberForm">
+            <div class="form-group">
+                <label>İsim</label>
+                <input type="text" id="memberName" required>
+            </div>
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" id="memberEmail" required>
+            </div>
+            <button type="submit">Ekle</button>
+        </form>
+    </div>
+    <!-- Footer -->
+    <script>
+        if (localStorage.getItem('adminLoggedIn') !== 'true') {
+            window.location.href = 'remuscanoapican.html';
+        }
+        document.getElementById('addMemberForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const name = document.getElementById('memberName').value;
+            const email = document.getElementById('memberEmail').value;
+            let members = JSON.parse(localStorage.getItem('members')) || [];
+            members.push({ name, email });
+            localStorage.setItem('members', JSON.stringify(members));
+            alert('Üye eklendi!');
+            this.reset();
+        });
+    </script>
+</body>
+</html>

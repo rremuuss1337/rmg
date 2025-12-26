@@ -1,0 +1,45 @@
+<!-- uye-listesi.html - Üye Listesi Sayfası -->
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RMG Üye Listesi</title>
+    <!-- Aynı linkler -->
+    <style>
+        /* Aynı stiller */
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 12px; border: 1px solid rgba(157,78,221,0.3); text-align: left; }
+        th { background: rgba(157,78,221,0.12); }
+    </style>
+</head>
+<body>
+    <!-- Nav -->
+    <div class="content">
+        <h2 class="section-title">Üye Listesi</h2>
+        <table id="memberTable">
+            <thead>
+                <tr><th>İsim</th><th>Email</th></tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+    <!-- Footer -->
+    <script>
+        if (localStorage.getItem('adminLoggedIn') !== 'true') {
+            window.location.href = 'remuscanoapican.html';
+        }
+        function loadMemberList() {
+            const tbody = document.querySelector('#memberTable tbody');
+            tbody.innerHTML = '';
+            let members = JSON.parse(localStorage.getItem('members')) || [];
+            members.forEach(member => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `<td>${member.name}</td><td>${member.email}</td>`;
+                tbody.appendChild(tr);
+            });
+        }
+        loadMemberList();
+    </script>
+</body>
+</html>

@@ -1,0 +1,132 @@
+<!-- admin-dashboard.html - Ana Admin Paneli -->
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RMG Admin Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Oxanium:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        /* Ana siteden kopyalanan stiller */
+        :root {
+            --primary-color: #9d4edd;
+            --bg-dark: #0a0a0a;
+            --bg-light: #f0f0f5;
+            --text-light: #ffffff;
+            --text-dark: #1a1a1a;
+            --transition-speed: 0.6s;
+        }
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            font-family: 'Oxanium', sans-serif;
+            font-weight: 600;
+            overflow-x: hidden;
+            transition: background-color var(--transition-speed), color var(--transition-speed);
+            margin: 0;
+        }
+        nav { /* Ana nav stili */ 
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 25px 8%;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            background: rgba(10, 10, 10, 0.85);
+            backdrop-filter: blur(12px);
+        }
+        .logo-wrapper { /* Logo stili */ 
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: var(--text-light);
+        }
+        .site-logo { height: 44px; }
+        .nav-links { display: flex; gap: 40px; }
+        .nav-links a { color: var(--text-light); text-decoration: none; }
+        .nav-links a:hover { color: var(--primary-color); }
+        .dashboard-content {
+            padding: 120px 8% 80px;
+            max-width: 1400px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        .section-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 48px;
+            margin-bottom: 60px;
+        }
+        .admin-sections {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        .admin-card {
+            background: rgba(157,78,221,0.08);
+            border: 1px solid rgba(157,78,221,0.3);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            text-decoration: none;
+            color: var(--text-light);
+            font-size: 24px;
+            font-weight: 700;
+        }
+        .admin-card:hover {
+            background: rgba(157,78,221,0.12);
+            border-color: var(--primary-color);
+            box-shadow: 0 20px 50px rgba(157,78,221,0.25);
+            transform: translateY(-10px);
+        }
+        footer { /* Footer stili */ 
+            background: rgba(10, 10, 10, 0.95);
+            padding: 40px 8% 20px;
+            text-align: center;
+        }
+        /* Diğer stiller ana siteden kopyalanabilir */
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="/" class="logo-wrapper">
+            <img src="https://cdn.discordapp.com/attachments/1453425560859709520/1454135850236510260/Gemini_Generated_Image_9mnz829mnz829mnz-3000x3000.png?ex=694ffd0b&is=694eab8b&hm=8dde327225ce152dd92860e3590089529308525eaaa9c0bbb0780c558909f6f0&" alt="RMG Logo" class="site-logo">
+            <div class="logo-text-group">
+                <span class="rmg">RMG</span>
+                <div class="full">Remus Music Group</div>
+            </div>
+        </a>
+        <div class="nav-links">
+            <a href="uye-ekle.html">Üye Ekle</a>
+            <a href="uye-cikar.html">Üye Çıkar</a>
+            <a href="uye-listesi.html">Üye Listesi</a>
+            <a href="#" onclick="logout()">Çıkış Yap</a>
+        </div>
+    </nav>
+    <div class="dashboard-content">
+        <h2 class="section-title">Admin Paneli</h2>
+        <div class="admin-sections">
+            <a href="uye-ekle.html" class="admin-card">Üye Ekle</a>
+            <a href="uye-cikar.html" class="admin-card">Üye Çıkar</a>
+            <a href="uye-listesi.html" class="admin-card">Üye Listesi</a>
+        </div>
+    </div>
+    <footer>
+        <!-- Ana footer içeriği -->
+        <div class="copyright">© Remus Music Group 2025. Tüm hakları saklıdır.</div>
+    </footer>
+    <script>
+        if (localStorage.getItem('adminLoggedIn') !== 'true') {
+            window.location.href = 'remuscanoapican.html';
+        }
+        function logout() {
+            localStorage.removeItem('adminLoggedIn');
+            window.location.href = 'remuscanoapican.html';
+        }
+    </script>
+</body>
+</html>
