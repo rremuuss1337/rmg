@@ -43,16 +43,29 @@
         if (localStorage.getItem('adminLoggedIn') !== 'true') {
             window.location.href = 'remuscanoapican.html';
         }
-        document.getElementById('addMemberForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const name = document.getElementById('memberName').value;
-            const email = document.getElementById('memberEmail').value;
-            let members = JSON.parse(localStorage.getItem('members')) || [];
-            members.push({ name, email });
-            localStorage.setItem('members', JSON.stringify(members));
-            alert('Üye eklendi!');
-            this.reset();
-        });
+document.getElementById('addMemberForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const name = document.getElementById('memberName').value;
+  const email = document.getElementById('memberEmail').value;
+
+  try {
+    const res = await fetch('/.netlify/functions/add-member', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, email })
+    });
+    const data = await res.json();
+    if (data.success) {
+      alert('Üye eklendi!');
+      this.reset();
+    } else {
+      alert('Hata: ' + (data.error || 'Bilinmeyen'));
+    }
+  } catch (err) {
+    alert('Bağlantı hatası');
+  }
+});
     </script>
 </body>
+
 </html>
