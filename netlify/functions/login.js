@@ -11,8 +11,8 @@ exports.handler = async (event) => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ 
           success: true, 
-          username: "Remus Admin", 
-          token: "bypass-token-123" 
+          username: "", 
+          token: "" 
         })
       };
     }
