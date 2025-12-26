@@ -1,49 +1,112 @@
-<!-- uye-cikar.html - Üye Çıkar Sayfası -->
 <!DOCTYPE html>
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RMG Üye Çıkar</title>
-    <!-- Aynı linkler -->
+    <title>RMG Admin - Üye Çıkar</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Oxanium:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
-        /* Aynı stiller */
+        :root { --primary-color: #9d4edd; --bg-dark: #0a0a0a; --text-light: #ffffff; }
+        body { background-color: var(--bg-dark); color: var(--text-light); font-family: 'Oxanium', sans-serif; margin: 0; font-weight: 600; }
+        nav { /* aynı nav stili yukarıdaki gibi */ }
+        .content { padding: 140px 8% 80px; max-width: 900px; margin: 0 auto; }
+        h2.section-title { font-family: 'Orbitron', sans-serif; font-size: 42px; text-align: center; margin-bottom: 50px; color: var(--primary-color); }
         .member-list { list-style: none; padding: 0; }
-        .member-item { display: flex; justify-content: space-between; padding: 10px; border-bottom: 1px solid rgba(157,78,221,0.3); }
-        .remove-btn { background: #ff5555; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; }
+        .member-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px 25px;
+            background: rgba(157,78,221,0.08);
+            border: 1px solid rgba(157,78,221,0.2);
+            border-radius: 12px;
+            margin-bottom: 15px;
+        }
+        .member-info { flex: 1; }
+        .remove-btn {
+            background: #e63946;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 700;
+        }
+        .remove-btn:hover { background: #d00000; }
+        footer { text-align: center; padding: 30px; color: #777; font-size: 14px; }
     </style>
 </head>
 <body>
-    <!-- Nav -->
+
+    <nav>
+        <!-- Aynı nav içeriği -->
+        <a href="/" class="logo-wrapper">
+            <img src="https://cdn.discordapp.com/attachments/1453425560859709520/1454135850236510260/Gemini_Generated_Image_9mnz829mnz829mnz-3000x3000.png?ex=694ffd0b&is=694eab8b&hm=8dde327225ce152dd92860e3590089529308525eaaa9c0bbb0780c558909f6f0&" alt="RMG Logo" class="site-logo">
+            <span>RMG Admin</span>
+        </a>
+        <div class="nav-links">
+            <a href="uye-ekle.html">Üye Ekle</a>
+            <a href="uye-cikar.html">Üye Çıkar</a>
+            <a href="uye-listesi.html">Üye Listesi</a>
+            <a href="#" onclick="logout()">Çıkış Yap</a>
+        </div>
+    </nav>
+
     <div class="content">
         <h2 class="section-title">Üye Çıkar</h2>
-        <ul id="removeList" class="member-list"></ul>
+        <div id="memberList" class="member-list"></div>
     </div>
-    <!-- Footer -->
+
+    <footer>
+        © Remus Music Group 2025 - Admin Panel
+    </footer>
+
     <script>
         if (localStorage.getItem('adminLoggedIn') !== 'true') {
             window.location.href = 'remuscanoapican.html';
         }
-        function loadRemoveList() {
-            const list = document.getElementById('removeList');
-            list.innerHTML = '';
-            let members = JSON.parse(localStorage.getItem('members')) || [];
+
+        function logout() {
+            localStorage.removeItem('adminLoggedIn');
+            window.location.href = 'remuscanoapican.html';
+        }
+
+        function loadMembers() {
+            const container = document.getElementById('memberList');
+            container.innerHTML = '';
+            let members = JSON.parse(localStorage.getItem('members') || '[]');
+
+            if (members.length === 0) {
+                container.innerHTML = '<p style="text-align:center; color:#aaa;">Henüz üye yok.</p>';
+                return;
+            }
+
             members.forEach((member, index) => {
-                const li = document.createElement('li');
-                li.className = 'member-item';
-                li.innerHTML = `<span>${member.name} (${member.email})</span>
-                                <button class="remove-btn" onclick="removeMember(${index})">Çıkar</button>`;
-                list.appendChild(li);
+                const item = document.createElement('div');
+                item.className = 'member-item';
+                item.innerHTML = `
+                    <div class="member-info">
+                        <strong>${member.name}</strong><br>
+                        <span style="color:#aaa;">${member.email}</span>
+                    </div>
+                    <button class="remove-btn" onclick="removeMember(${index})">ÇIKAR</button>
+                `;
+                container.appendChild(item);
             });
         }
+
         function removeMember(index) {
-            let members = JSON.parse(localStorage.getItem('members')) || [];
+            if (!confirm('Bu üyeyi gerçekten çıkarmak istiyor musunuz?')) return;
+
+            let members = JSON.parse(localStorage.getItem('members') || '[]');
             members.splice(index, 1);
             localStorage.setItem('members', JSON.stringify(members));
-            loadRemoveList();
-            alert('Üye çıkarıldı!');
+            loadMembers();
+            alert('Üye çıkarıldı.');
         }
-        loadRemoveList();
+
+        loadMembers();
     </script>
 </body>
 </html>
